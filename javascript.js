@@ -13,42 +13,6 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-class Node {
-    constructor(data, left, right) {
-        this.data = data;
-        this.left = null;
-        this.right = null;
-    }
-}
-
-class Tree {
-    constructor(dataArray) {
-        this.dataArray = dataArray;
-        this.root = null;
-    }
-
-    buildTree() {
-        let array = sort(this.dataArray);
-        console.log("Array Sorted:")
-        console.log(array)
-        const midPoint = Math.floor(array.length/2)
-        this.root = array[midPoint];
-        console.log("Root selected:")
-        console.log(this.root);
-        const rootNode = new Node(this.root);
-        console.log(rootNode);
-
-
-        return this.root;
-    }
-
-    printTree() {
-        prettyPrint(this.root);
-    }
-}
-
-
-
 function sort(array) {
     array.sort((a, b) => a - b);
 
@@ -64,8 +28,48 @@ function sort(array) {
     return array;
 }
 
-const testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+class Node {
+    constructor(data, left = null, right = null) {
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+}
 
-const testTree = new Tree(testArray);
-testTree.buildTree();
-// testTree.printTree();
+class Tree {
+    constructor(root = null) {
+        this.root = root;
+    }
+
+
+    buildTree(array, start = 0, end = array.length - 1) {
+
+        if (start > end) {
+            return null;
+        }
+
+        const mid = Math.floor((start + end) / 2);
+
+        const node = new Node(array[mid]);
+        console.log(node);
+
+        node.left = this.buildTree(array, start, mid - 1);
+        node.right = this.buildTree(array, mid + 1, end);
+
+        return node;
+    }
+}
+
+
+
+const testArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+let sortedTestArray = sort(testArray);
+console.log(`Array Sorted: ${sortedTestArray}`);
+
+const testTree = new Tree();
+testTree.root = testTree.buildTree(sortedTestArray);
+console.log(JSON.stringify(testTree.root, null, 2));
+
+
+
